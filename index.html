@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Title</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    li { cursor: pointer; }
+  </style>
+
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <!-- Logo -->
+          <a class="navbar-brand" href="#">
+            <img src="path/to/your/logo.png" alt="Logo" height="30">
+          </a>
+      
+          <!-- Toggle button for small screens -->
+          <button onclick="showDiv('home')" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      
+          <!-- Menu items -->
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showDiv('search')">Search</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showDiv('playlist')">Playlist</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" onmouseover="showCredits()" id="credits">Credits</a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </nav>
+  </header>
+
+  <main style = "min-height: 1150px">
+    <div id="home">
+      <p> Home </p>
+    </div>
+
+    <div class="container mt-5" id="search-browse-songs">
+      
+      <div class="row justify-content-center g-2">
+        
+        <div class="col-md-3">
+          <h3 class="mb-4 text-center">
+            Basic Song Search
+          </h3>
+          <form>
+            <!-- Title -->
+            <div class="form-check">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="song-filter" id="title" checked>
+                <label class="form-check-label" for="title">Title</label>
+              </div>
+              <div class="mb-3">
+                <input type="text" class="form-control" name="form-title" id="form-title" placeholder="Song Title">
+              </div>
+            </div>
+
+            <!-- Artist -->
+            <div class="form-check">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="song-filter" id="artist">
+                <label class="form-check-label" for="artist">Artist</label>
+              </div>
+              <div class="mb-3">
+                <select class="form-select form-select-lg" name="form-artist" id="form-artist">
+                </select>
+              </div>
+            </div>
+
+            <!-- Genre -->
+            <div class="form-check">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="song-filter" id="genre">
+                <label class="form-check-label" for="genre">Genre</label>
+              </div>
+              <div class="mb-3">
+                <select class="form-select form-select-lg" name="form-genre" id="form-genre">
+                </select>
+              </div>
+            </div>
+
+            <!-- Clear and Submit -->
+            <div class="text-center">
+              <button type="reset" class="btn btn-primary" onclick="clearFields()">Reset</button>
+              <div class="btn btn-primary" onclick="filterSongs()">Submit</div>
+            </div>
+            
+          </form>
+        </div>
+        
+        <!-- Browse / Search Results -->
+        <div class="col-md-9">
+          <h3 class="mb-4 text-center">
+            Browse / Search Results
+          </h3>
+          <div class="table-responsive" style="max-height: 700px;">
+            <table id="list-songs" class="table table-striped
+            table-hover	
+            table-borderless
+            table-primary
+            align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th onclick="addTableData('title')" id="title" style="cursor: pointer;">Title
+                    <i class="fa fa-angle-double-down"></i><span></span>
+                  </th>
+                  <th onclick="addTableData('artist')" id="artist" style="cursor: pointer;">Artist
+                    <i class="fa fa-angle-double-up"></i><span></span>
+                  </th>
+                  <th onclick="addTableData('year')" id="year" style="cursor: pointer;">Year
+                    <i class="fa fa-angle-double-up"></i><span></span>
+                  </th>
+                  <th onclick="addTableData('genre')" id="genre" style="cursor: pointer;">Genre
+                    <i class="fa fa-angle-double-up"></i><span></span>
+                  </th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                  
+                </tbody>
+                <tfoot>
+                  
+                </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song details -->
+    <div id="song-details" class="mt-5">
+      <div class="container">
+        <div class="row justify-content-center align-items-center g-2">
+          <div class="col-md-6">
+            <h5 class="text-center">Song Information</h5>
+            <!-- Horizontal under breakpoint -->
+            <ul class="list-group">
+              <b>Title:</b> <li class="list-group-item mt-2 mb-2" id="song-title"> </li> 
+              <b>Artist:</b> <li class="list-group-item mt-2 mb-2" id="song-artist"> </li>
+              <b>Genre:</b> <li class="list-group-item mt-2 mb-2" id="song-genre"></li>
+              <b>Year:</b> <li class="list-group-item mt-2 mb-2" id="song-year"></li>
+              <b>Duration:</b><li class="list-group-item mt-2 mb-2" id="song-duration"></li>
+            </ul>
+            <h6>Analysis data: </h6>
+            <ul class="list-group">
+              <b>BPM:</b><li class="list-group-item mt-2 mb-2" id="song-bpm"> </li>
+              <b>Energy:</b> <li class="list-group-item mt-2 mb-2" id="song-energy"> </li>
+              <b>Danceability:</b> <li class="list-group-item mt-2 mb-2" id="song-danceability"></li>
+              <b>Liveness:</b> <li class="list-group-item mt-2 mb-2" id="song-liveness"></li>
+              <b>Valence:</b> <li class="list-group-item mt-2 mb-2" id="song-valence"></li>
+              <b>Acousticness:</b> <li class="list-group-item mb-2" id="song-acousticness"></li>
+              <b>Speechiness:</b> <li class="list-group-item mt-2 mb-2" id="song-speechiness"></li>
+              <b>Popularity:</b> <li class="list-group-item mt-2 mb-2" id="song-popularity"></li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <canvas id="radarChart" width="400" height="400"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="playlist">
+      <div class="gap-2">
+        <button type="button" name="clearPlayList" id="clearPlaylist" class="btn btn-primary" onclick="clearPlayList()">Clear Playlist</button>
+      </div>
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-8">
+        <h3 class="mb-4 text-center">
+         Playlist Details
+        </h3>
+        <div class="table-responsive" style="max-height: 700px;">
+          <table id="playlist-songs" class="table table-striped text-center
+          table-hover	
+          table-borderless
+          table-primary
+          align-middle">
+            <thead class="table-light">
+              <tr>
+                <th id="title" style="cursor: pointer;">Title
+                  <i class="fa fa-angle-double-down"></i><span></span>
+                </th>
+                <th id="artist" style="cursor: pointer;">Artist
+                  <i class="fa fa-angle-double-up"></i><span></span>
+                </th>
+                <th id="year" style="cursor: pointer;">Year
+                  <i class="fa fa-angle-double-up"></i><span></span>
+                </th>
+                <th id="genre" style="cursor: pointer;">Genre
+                  <i class="fa fa-angle-double-up"></i><span></span>
+                </th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody class="table-group-divider">
+                
+              </tbody>
+              <tfoot>
+                
+              </tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-2">
+      </div>
+    </div>
+  </main>
+  <footer class="mt-5" style="background-color: black; color: white;">
+    <p class="text-center">&copy; 2023 Your Website. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let playlist = {};
+
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("playlist").style.display = 'none';
+      document.getElementById("search-browse-songs").style.display = 'none';
+      document.getElementById("song-details").style.display = 'none';
+
+      // Check if the data is already in localStorage
+      const storedData = localStorage.getItem("apiData");
+  
+      if (!storedData) {
+        fetch('https://www.randyconnolly.com/funwebdev/3rd/api/music/songs-nested.php')
+          .then(response => response.json())
+          .then(data => {
+            localStorage.setItem("apiData", JSON.stringify(data));
+          })
+          .catch(error => console.error("Error fetching data:", error));
+      }
+
+      addTableData('title', true, "title");
+      addFormFilterData();
+      displayTopGenres();
+      addPlaylistData();
+      
+    });
+
+    function displayTopGenres() {
+
+      const storedData = localStorage.getItem("apiData");
+      const data = JSON.parse(storedData);
+
+      let genres = [];
+      let genreCounts = {};
+
+      // fetch('genres.json') 
+      //   .then(response => {
+      //     if (!response.ok) {
+      //       throw new Error('Network response was not ok');
+      //     }
+      //     return response.json();
+      //   })
+      //   .then(genreData => {
+      //     for (let genre in genreData) {
+      //       genres.push(genreData[genre].name);
+      //     }
+      //   })
+      //   .catch(error => {
+      //     // Handle errors
+      //     console.error('Error reading JSON file:', error);
+      //   });
+
+      // for (const key in data) {
+      //   const storedData = localStorage.getItem("apiData");
+      //   const data = JSON.parse(storedData);
+      //   for (const genre in genres) {
+          
+      //     // for (const key in data) {
+      //     //   let eachSong = data[key];
+      //     //   if (genreCount[eachSong.genre.name]) {
+      //     //     genreCount[genreName]++;
+      //     //   } else {
+      //     //     genreCount[genreName] = 1;
+      //     //   }
+      //     //   break;
+      //     // }
+      //     console.log(genreCount);
+      //     break;
+         
+      //   }
+      // }
+
+      data.forEach(song => {
+        const genreName = song.genre.name;
+
+        if (genreCounts[genreName]) {
+          genreCounts[genreName]++;
+        } else {
+          genreCounts[genreName] = 1;
+        }
+      });
+
+      // console.log(sortedGenres);
+    }
+
+    function addFormFilterData() {
+      let artistsData = {};
+      selectArtistElement = document.getElementById("form-artist");
+      selectGenreElement = document.getElementById("form-genre");
+      
+      fetch('artists.json') 
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(artistsData => {
+          // Handle the JSON data
+          for (eachData in artistsData) {
+            let option = document.createElement('option');
+            option.textContent = artistsData[eachData].name;
+            option.setAttribute("value", artistsData[eachData].id);
+            selectArtistElement.appendChild(option);
+          }
+        })
+        .catch(error => {
+          // Handle errors
+          console.error('Error reading JSON file:', error);
+        });
+
+      fetch('genres.json') 
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(genreData => {
+          // Handle the JSON data
+          for (eachData in genreData) {
+            let option = document.createElement('option');
+            option.textContent = genreData[eachData].name;
+            option.setAttribute("value", genreData[eachData].id);
+            selectGenreElement.appendChild(option);
+          }
+        })
+        .catch(error => {
+          // Handle errors
+          console.error('Error reading JSON file:', error);
+        });
+    }
+
+    function filterSongs() {
+      
+      let selectedFilter = document.querySelector('input[name="song-filter"]:checked').getAttribute("id");
+      let filterValue = "";
+
+      if (selectedFilter == "title") {
+        filterValue = document.getElementById('form-' + selectedFilter).value;
+      } else {
+        let selectElement = document.querySelector(`select[name="${"form-" + selectedFilter}"]`);
+        filterValue = selectElement.options[selectElement.selectedIndex].value;
+      }
+
+      addTableData("title", false, selectedFilter, filterValue);
+      
+      return false;
+    }
+
+    function clearFields() {
+      document.getElementById('title').checked = true;
+      document.getElementById('artist').checked = false;
+      document.getElementById('genre').checked = false;
+
+      document.getElementById('form-title').value = false;
+      document.getElementById('form-genre').value = false;
+      document.getElementById('form-artist').value = false;
+
+      addTableData('title');
+    }
+
+    function filterData(data, noFilter, filterBy, filterValue) {
+      let filteredData = [];
+
+      if (noFilter) {
+        return data;
+      }
+
+      if (filterBy == "title") {
+        filteredData = data.filter(person => {
+          return person.title.toLowerCase().includes(filterValue.toLowerCase());
+        });
+      } else if (filterBy == "artist") {
+        filteredData = data.filter(person => {
+          return person.artist.id == filterValue;
+        });
+      } else if (filterBy == "genre") {
+        filteredData = data.filter(person => {
+          return person.genre.id == filterValue;
+        });
+      }
+      return filteredData;
+    }
+
+    function addTableData(sortBy, noFilter=true, filterBy="title", filterValue) {
+      const storedData = localStorage.getItem("apiData");
+      const data = JSON.parse(storedData);
+
+      const filteredData = filterData(data, noFilter, filterBy, filterValue);
+      
+      // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+      if (sortBy == 'title') {
+        filteredData.sort((a, b) => a.title.localeCompare(b.title));
+      } else if (sortBy == 'artist') {
+        filteredData.sort((a, b) => a.artist.name.localeCompare(b.artist.name));
+        document.getElementById('title').childNodes[1].style.display = 'none';
+        document.getElementById('title').childNodes[1].style.display = 'none';
+      } else if (sortBy == 'year') {
+        filteredData.sort((a, b) => a.year - b.year);
+      } else if (sortBy == 'genre') {
+        filteredData.sort((a, b) => a.genre.name.localeCompare(b.genre.name));
+      }
+      
+      // Get the table body
+      const tableBody = document.querySelector("#list-songs tbody");
+
+      tableBody.innerHTML = '';
+
+      // Iterate through the data and add rows to the table
+      filteredData.forEach(item => {
+        // Reference: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_table_insertrow
+        const row = tableBody.insertRow();
+        
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        const cell3 = row.insertCell(2);
+        const cell4 = row.insertCell(3);
+        const cell5 = row.insertCell(4);
+
+        cell1.setAttribute('style', `cursor: pointer;`);
+        cell1.setAttribute('onclick', `showSongDetails(${JSON.stringify(item)})`);
+
+        cell2.setAttribute('style', `cursor: pointer;`);
+        cell2.setAttribute('onclick', `showSongDetails(${JSON.stringify(item)})`);
+
+        cell3.setAttribute('style', `cursor: pointer;`);
+        cell3.setAttribute('onclick', `showSongDetails(${JSON.stringify(item)})`);
+
+        cell4.setAttribute('style', `cursor: pointer;`);
+        cell4.setAttribute('onclick', `showSongDetails(${JSON.stringify(item)})`);
+
+        // Populate cells with data
+        if(item.title.length > 25){
+          cell1.textContent = (item.title.substring(0, 24) + '…');
+          cell1.setAttribute("onmouseover", "showFullTitle('" + item.title + "', this)");
+        } else {
+          cell1.textContent = item.title;
+        }
+        cell2.textContent = item.artist.name;
+        cell3.textContent = item.year;
+        cell4.textContent = item.genre.name;
+
+        const addButton = document.createElement('button');
+        addButton.textContent = 'Add';
+        cell5.setAttribute("onclick", "addToPlaylist(" + JSON.stringify(item) + ")");
+        cell5.appendChild(addButton);
+
+      });
+    }
+
+    function addPlaylistData() {
+      const tableBody = document.querySelector("#playlist-songs tbody");
+
+      tableBody.innerHTML = '';
+
+      // Iterate through the data and add rows to the table
+      if (playlist) {
+        for (const key in playlist) {
+        // Reference: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_table_insertrow
+        const row = tableBody.insertRow();
+
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        const cell3 = row.insertCell(2);
+        const cell4 = row.insertCell(3);
+        const cell5 = row.insertCell(4);
+
+        cell1.setAttribute('style', `cursor: pointer;`);
+        cell1.setAttribute('onclick', `showSongDetails(${JSON.stringify(playlist[key])})`);
+
+        cell2.setAttribute('style', `cursor: pointer;`);
+        cell2.setAttribute('onclick', `showSongDetails(${JSON.stringify(playlist[key])})`);
+
+        cell3.setAttribute('style', `cursor: pointer;`);
+        cell3.setAttribute('onclick', `showSongDetails(${JSON.stringify(playlist[key])})`);
+
+        cell4.setAttribute('style', `cursor: pointer;`);
+        cell4.setAttribute('onclick', `showSongDetails(${JSON.stringify(playlist[key])})`);
+
+        // Populate cells with data
+        if(playlist[key].title.length > 25){
+          cell1.textContent = (playlist[key].title.substring(0, 24) + '…');
+          cell1.setAttribute("onmouseover", "showFullTitle('" + playlist[key].title + "', this)");
+        } else {
+          cell1.textContent = playlist[key].title;
+        }
+        cell2.textContent = playlist[key].artist.name;
+        cell3.textContent = playlist[key].year;
+        cell4.textContent = playlist[key].genre.name;
+
+        const addButton = document.createElement('button');
+        addButton.textContent = 'Delete';
+        cell5.setAttribute("onclick", "deleteFromPlaylist(" + JSON.stringify(playlist[key]) + ")");
+        cell5.appendChild(addButton);
+
+        }
+        }
+      }
+    
+    function clearPlayList() {
+      playlist = {};
+      addPlaylistData();
+    }
+
+    function deleteFromPlaylist(item) {
+      for (var key in playlist) {
+        if (playlist.hasOwnProperty(key)) {
+          playlist[item.song_id] = "";
+        }
+      }
+      addPlaylistData();
+    }
+
+    function showFullTitle(title, cell1) {
+      cell1.setAttribute("title", title);
+      setTimeout(() => {
+        cell1.removeAttribute('title');
+      }, 5000);
+    }
+
+    function addToPlaylist(item) {
+      playlist[item.song_id] = item;
+      alert("Successfully added the song with title: " + item.title);
+      addPlaylistData();
+    }
+
+    function showSongDetails(item) {
+      const minutes = Math.floor(item.details.duration / 60);
+      const remainingSeconds = item.details.duration % 60;
+
+      document.getElementById("home").style.display = 'none';
+      document.getElementById("playlist").style.display = 'none';
+      document.getElementById("search-browse-songs").style.display = 'none';
+      document.getElementById("song-details").style.display = 'block';
+
+      document.getElementById("song-title").textContent = item.title;
+      document.getElementById("song-artist").textContent = item.artist.name;
+      document.getElementById("song-genre").textContent = item.genre.name;
+      document.getElementById("song-year").textContent = item.year;
+      document.getElementById("song-duration").textContent = minutes + ":" + remainingSeconds;
+      document.getElementById("song-bpm").textContent = item.details.bpm;
+      document.getElementById("song-energy").textContent = item.analytics.energy;
+      document.getElementById("song-danceability").textContent = item.analytics.danceability;
+      document.getElementById("song-liveness").textContent = item.analytics.liveness;
+      document.getElementById("song-valence").textContent = item.analytics.valence;
+      document.getElementById("song-acousticness").textContent = item.analytics.acousticness;
+      document.getElementById("song-speechiness").textContent = item.analytics.speechiness;
+      document.getElementById("song-popularity").textContent = item.details.popularity;
+
+      // https://www.chartjs.org/docs/latest/charts/radar.html
+      const data = {
+        labels: ['danceability', 'energy', 'valence', 'speechiness', 'loudness', 'liveness'],
+        datasets: [{
+          label: 'Radar Chart',
+          data: [
+            item.analytics.danceability, 
+            item.analytics.energy, 
+            item.analytics.valence, 
+            item.analytics.speechiness, 
+            item.details.loudness, 
+            item.analytics.liveness, 
+        ],
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      };
+
+      // Your radar chart options
+      const options = {
+        scale: {
+          angleLines: {
+            display: true
+          },
+          ticks: {
+            beginAtZero: true,
+            max: 100
+          }
+        }
+      };
+
+      // Get the canvas element
+      const ctx = document.getElementById('radarChart').getContext('2d');
+
+      // Create the radar chart
+      const radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: data,
+        options: options
+      });
+    }
+
+    function showDiv(id) {
+        if (id == 'search') {
+          document.getElementById("home").style.display = 'none';
+          document.getElementById("playlist").style.display = 'none';
+          document.getElementById("search-browse-songs").style.display = 'block';
+          document.getElementById("song-details").style.display = 'none';
+        } else if (id == 'playlist') {
+          document.getElementById("home").style.display = 'none';
+          document.getElementById("search-browse-songs").style.display = 'none';
+          document.getElementById("playlist").style.display = 'block';
+          document.getElementById("song-details").style.display = 'none';
+        } else if (id == 'home') {
+          document.getElementById("playlist").style.display = 'none';
+          document.getElementById("search-browse-songs").style.display = 'none';
+          document.getElementById("home").style.display = 'block';
+          document.getElementById("song-details").style.display = 'none';
+        }
+    }
+
+    function showCredits() {
+      const credits = document.getElementById('credits');
+      credits.setAttribute('title', 'Jaskirat \n test \n https:test.com');
+
+      setTimeout(() => {
+        credits.removeAttribute('title');
+      }, 5000);
+    }
+
+  </script>
+</body>
+
+</html>
